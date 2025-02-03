@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Document</title>
+    <link rel="stylesheet" th:href="@{/css/nav.css}">
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+</head>
+<body>
+<div class="body-container">
+    <div th:replace="~{/nav :: nav}"></div>
+
+    <h1>Posts</h1>
+    <a href="/posts/new">Create New Post</a>
+    <ul>
+        <th:block th:each="post : ${posts}">
+            <li>
+                <a th:href="@{/posts/{id}(id=${post.id})}" th:text="${post.title}"></a>
+            </li>
+        </th:block>
+    </ul>
+</div>
+
+</body>
+</html>

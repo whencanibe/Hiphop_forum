@@ -1,0 +1,101 @@
+.nav-bar {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    background-color: white;
+    padding: 1.5rem 2rem;
+    box-sizing: border-box;
+}
+
+.logo-and-buttons {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    align-items: center;
+}
+
+.nav-list ul {
+    display: flex; /* ul을 가로로 배치 */
+    list-style: none; /* 리스트 스타일 제거 */
+    padding: 0; /* 기본 패딩 제거 */
+    margin: 0; /* 기본 마진 제거 */
+    gap: 1rem; /* 메뉴 항목 사이의 간격 */
+}
+
+.nav-list li {
+    margin: 0; /* li의 마진 제거 */
+}
+
+.nav-list a {
+    text-decoration: none; /* 링크 밑줄 제거 */
+    color: black; /* 링크 색상 설정 */
+    font-weight: bold; /* 글자 두껍게 */
+    padding: 0.5rem 1rem; /* 패딩 추가 */
+    border-radius: 4px; /* 둥근 모서리 */
+}
+
+.nav-list a:hover {
+    background-color: #f5f5f5; /* 호버 시 배경색 변경 */
+    transition: background-color 0.3s; /* 부드러운 전환 효과 */
+}
+
+.rounded-btn {
+    padding: 0.75rem 1rem;
+    border-radius: 40px;
+    background-color: #f5f5f5;
+    color: black;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.signup-btn {
+    background-color: black;
+    color: white;
+}
+
+.signup-btn:hover {
+    padding: 0.9rem 1rem;
+    transition: all 0.3s;
+}
+
+.login-btn:hover {
+    background-color: black;
+    color: white;
+    transition: all 0.3s;
+}
+
+/* 간단한 스타일링 예제 */
+.profile-menu {
+    position: relative;
+    display: inline-block;
+}
+
+.profile-dropdown {
+    display: none;
+    position: absolute;
+    right: 0;
+    background-color: white;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.profile-dropdown li {
+    padding: 10px 20px;
+}
+
+.profile-dropdown li a {
+    text-decoration: none;
+    color: black;
+}
+
+.profile-dropdown li:hover {
+    background-color: #f0f0f0;
+}
+
+.profile-menu:hover .profile-dropdown {
+    display: block;
+}

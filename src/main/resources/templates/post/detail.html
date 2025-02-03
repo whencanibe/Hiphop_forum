@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${post.title}"></title>
+    <link rel="stylesheet" th:href="@{/css/nav.css}">
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+</head>
+<body>
+<div class="body-container">
+    <div th:replace="~{/nav :: nav}"></div>
+    <h1 th:text="${post.title}"></h1>
+    <p th:text="${post.content}"></p>
+    <p>Author: <span th:text="${post.user.username}"></span></p>
+
+    <h2>Comments</h2>
+    <ul>
+        <th:block th:each="comment : ${comments}">
+            <li>
+                <strong th:text="${comment.user.username}"></strong>:
+                <span th:text="${comment.content}"></span>
+            </li>
+        </th:block>
+    </ul>
+
+    <form action="/comments" method="post">
+        <input type="hidden" name="postId" th:value="${post.id}">
+        <label for="content">Content:</label>
+        <textarea id="content" name="content"></textarea><br>
+        <button type="submit">Submit</button>
+    </form>
+
+    <a href="/posts">Back to Posts</a>
+</div>
+
+</body>
+</html>
