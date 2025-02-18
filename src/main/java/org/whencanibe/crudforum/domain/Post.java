@@ -1,13 +1,23 @@
 package org.whencanibe.crudforum.domain;
 
 import jakarta.persistence.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
+@Getter
+@NoArgsConstructor
 @Entity
-public class Post {
+public class Post extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -17,9 +27,11 @@ public class Post {
     @Column(columnDefinition = "TEXT")
     private String content;
 
-    private String imagePath;
+    private int viewCount;
 
-    private LocalDateTime createdDate = LocalDateTime.now();
+    private int likeCount;
+
+    private String imagePath;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
@@ -28,59 +40,40 @@ public class Post {
     @JoinColumn(name="user_id")
     private User user;
 
-    public User getUser() {
-        return user;
-    }
+    @Value("${file.upload-dir}")
+    private String uploadDir;
 
-    public void setUser(User user) {
+    @Builder
+    public Post(String title, String content, User user){
+        this.title = title;
+        this.content = content;
         this.user = user;
     }
-    // Getters and Setters
-    public Long getId() {
-        return id;
-    }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void increaseViewCount(){
+        this.viewCount += 1;
     }
+    public void increaseLike(){this.likeCount += 1;}
+    public void decreaseLike(){this.likeCount -= 1;}
 
-    public String getTitle() {
-        return title;
-    }
+    public String saveImageFile(MultipartFile file) {
+        String originalFilename = file.getOriginalFilename();
+        // 확장자 추출
+        String ext = org.springframework.util.StringUtils.getFilenameExtension(originalFilename);
+        // 중복 방지용 UUID 사용
+        String newFileName = UUID.randomUUID().toString() + "." + ext;
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
+        // 실제 파일 경로
+        File destination = new File(uploadDir, newFileName);
+        try {
+            file.transferTo(destination);
+        } catch (IOException e) {
+            // 예외 처리(적절히 로그/에러처리)
+            e.printStackTrace();
+        }
 
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public LocalDateTime getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(LocalDateTime createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    public List<Comment> getComments() {
-        return comments;
-    }
-
-    public void setComments(List<Comment> comments) {
-        this.comments = comments;
-    }
-
-    public String getImagePath() {
-        return imagePath;
-    }
-
-    public void setImagePath(String imagePath) {
-        this.imagePath = imagePath;
+        this.imagePath = uploadDir + newFileName;
+        // 저장 경로
+        return newFileName;
     }
 }

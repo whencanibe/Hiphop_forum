@@ -6,21 +6,65 @@
     <title>Document</title>
     <link rel="stylesheet" th:href="@{/css/nav.css}">
     <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/post/post-list.css}">
 </head>
 <body>
 <div class="body-container">
     <div th:replace="~{/nav :: nav}"></div>
 
-    <h1>Posts</h1>
-    <a href="/posts/new">Create New Post</a>
-    <ul>
-        <th:block th:each="post : ${posts}">
-            <li>
-                <a th:href="@{/posts/{id}(id=${post.id})}" th:text="${post.title}"></a>
-            </li>
-        </th:block>
-    </ul>
-</div>
+    <div class="content-container">
+        <div class="title-container">
+            <h1>Posts</h1>
+            <a href="/posts/new">Create New Post</a>
+        </div>
+        <div class="posts-container">
+            <table class="posts-table">
+                <thead>
+                <tr>
+                    <th>번호</th>
+                    <th>제목</th>
+                    <th>작성자</th>
+                    <th>조회수</th>
+                    <th>작성일</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="post, stat : ${posts}">
+                    <!-- stat.index는 0부터 시작 -->
+                    <td th:text="${post.id}"></td>
+                    <td>
+                        <a th:href="@{/posts/{id}(id=${post.id})}"
+                           th:text="${post.title}"></a>
+                    </td>
+                    <td th:text="${post.user.username}"></td>
+                    <td th:text="${post.viewCount}"></td>
+                    <td th:text="${post.createdDate}"></td>
+                </tr>
+                </tbody>
+            </table>
+            <!-- 페이지네이션 -->
+            <div class="pagination">
+                <!-- 이전 버튼 (1페이지 초과일 때만) -->
+                <span th:if="${currentPage} > 1">
+                <a th:href="@{/posts(page=${currentPage - 1})}">이전</a>
+                </span>
 
+                <!-- 페이지 번호들: 1부터 totalPages까지 반복 -->
+                <span th:each="p : ${#numbers.sequence(1, totalPages)}">
+                <a th:if="${p} != ${currentPage}"
+                   th:href="@{/posts(page=${p})}"
+                   th:text="${p}">1</a>
+                <span th:if="${p} == ${currentPage}"
+                      th:text="${p}"></span>
+                </span>
+
+                <!-- 다음 버튼 (현재 페이지 < 전체 페이지 수일 때만) -->
+                <span th:if="${currentPage} < ${totalPages}">
+                <a th:href="@{/posts(page=${currentPage + 1})}">다음</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>

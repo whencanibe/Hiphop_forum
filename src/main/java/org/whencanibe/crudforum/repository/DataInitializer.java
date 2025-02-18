@@ -19,9 +19,10 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args){
-        User user1 = userService.registerUser("abcd@gmail.com" , "qwer1234" , "davecho");
-        userService.registerUser("efgh@gmail.com" , "qwer1234" , "minjikim");
+        User user1 = userService.registerUser("abcd@gmail.com" , "qwer1234" , "dave");
+        userService.registerUser("efgh@gmail.com" , "qwer1234" , "user2");
 
-        postService.createPost(user1.getId(), "인사드립니다.","안녕하세요. 반갑습니다.",null);
+        for(int i = 0 ; i < 100 ; i++)
+            postService.createPost(user1.getId(), "인사드립니다.","안녕하세요. 반갑습니다.",null);
     }
 }

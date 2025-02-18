@@ -1,17 +1,20 @@
 package org.whencanibe.crudforum.domain;
 import jakarta.persistence.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+@NoArgsConstructor
+@Getter
 @Entity
-public class Comment {
+public class Comment extends BaseTimeEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String content;
-
-    private LocalDateTime createdDate = LocalDateTime.now();
 
     @ManyToOne
     @JoinColumn(name = "post_id")
@@ -21,45 +24,14 @@ public class Comment {
     @JoinColumn(name="user_id")
     private User user;
 
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
+    @Builder
+    public Comment(String content, Post post, User user) {
+        this.content = content;
+        this.post = post;
         this.user = user;
     }
-    // Getters and Setters
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
+    public void edit(String content){
         this.content = content;
-    }
-
-
-    public LocalDateTime getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(LocalDateTime createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    public Post getPost() {
-        return post;
-    }
-
-    public void setPost(Post post) {
-        this.post = post;
     }
 }

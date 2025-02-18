@@ -1,0 +1,132 @@
+/* 전체 레이아웃 관련 */
+.body-container {
+    /* 전체 레이아웃 폭을 좀 제한, 가운데 정렬 */
+    max-width: 100%;
+    margin: 0 auto;
+    background-color: white; /* 살짝 밝은 배경 */
+}
+
+/* 상단 제목과 "글 작성" 버튼 등이 있는 영역 */
+.title-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+.title-container h1 {
+    font-size: 1.8rem;
+    margin: 0;
+}
+
+.title-container a {
+    padding: 8px 16px;
+    background-color: #007bff;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 0.9rem;
+}
+
+.title-container a:hover {
+    background-color: #0056b3;
+}
+
+/* 게시글 목록을 감싸는 메인 영역 */
+.content-container {
+    width: 85%;
+}
+
+/* 게시글 테이블 스타일 */
+.posts-table {
+    width: 100%;
+    border-collapse: collapse; /* 테이블 셀 간격 제거 */
+    background-color: #fff;
+}
+
+.posts-table thead {
+    background-color: #fafafa;
+}
+
+.posts-table th, .posts-table td {
+    padding: 12px;
+    border-bottom: 1px solid #eaeaea;
+    text-align: left;
+}
+
+.posts-table th {
+    font-weight: 600;
+    color: #333;
+    /* 상단 고정 헤더처럼 보이게 배경색 조금 진하게 가능 */
+    /* background-color: #f3f3f3; */
+}
+
+.posts-table td a {
+    color: #333;
+    text-decoration: none;
+}
+
+.posts-table td a:hover {
+    text-decoration: underline;
+}
+
+/* 페이지네이션 영역 */
+.pagination {
+    margin-top: 20px;
+    text-align: center;
+    user-select: none;
+}
+
+.pagination span, .pagination a {
+    display: inline-block;
+    margin: 0 5px;
+    padding: 6px 10px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    color: #333;
+    font-size: 0.9rem;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.pagination a:hover {
+    background-color: #f0f0f0;
+}
+
+.pagination span {
+    /* 현재 페이지인 경우 */
+    font-weight: bold;
+    background-color: #ddd; /* 강조 색상 */
+    cursor: default;
+    /* 더 클릭이 안 되도록 */
+    /*pointer-events: none;*/
+}
+
+/* 반응형 조금 대응: 너무 작은 화면에서 글씨 작아지지 않게 */
+@media (max-width: 600px) {
+    .title-container {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .posts-table th, .posts-table td {
+        font-size: 0.85rem;
+        padding: 8px;
+    }
+
+    .title-container h1 {
+        font-size: 1.5rem;
+    }
+    .title-container a {
+        font-size: 0.8rem;
+        padding: 6px 10px;
+    }
+
+    .pagination span, .pagination a {
+        margin: 2px;
+        padding: 4px 8px;
+        font-size: 0.8rem;
+    }
+}

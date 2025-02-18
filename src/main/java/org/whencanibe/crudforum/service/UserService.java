@@ -1,21 +1,18 @@
 package org.whencanibe.crudforum.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.whencanibe.crudforum.domain.User;
 import org.whencanibe.crudforum.repository.UserRepository;
 
+@RequiredArgsConstructor
 @Service
 @Transactional
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.passwordEncoder= passwordEncoder;
-    }
 
     public User registerUser(String email, String password, String username){
         if(userRepository.findByEmail(email).isPresent()){
@@ -23,10 +20,11 @@ public class UserService {
         }
 
         String encodedPassword = passwordEncoder.encode(password);
-        User user = new User();
-        user.setEmail(email);
-        user.setUsername(username);
-        user.setPassword(encodedPassword);
+        User user = User.builder()
+                .email(email)
+                .password(encodedPassword)
+                .username(username)
+                .build();
 
         return userRepository.save(user);
     }
