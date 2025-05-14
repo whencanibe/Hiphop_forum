@@ -2,7 +2,6 @@ package org.whencanibe.crudforum.controller;
 
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,5 +33,16 @@ public class UserController {
         return "user/login";
     }
 
+    @PostMapping("/login")
+    public String loginUser(String email, String password, HttpSession session, Model model) {
+        User user = userService.login(email, password);
 
+        if (user != null) {
+            session.setAttribute("loginUser", user);
+            return "redirect:/"; // 홈으로 이동
+        } else {
+            model.addAttribute("error", "Invalid email or password");
+            return "user/login";
+        }
+    }
 }

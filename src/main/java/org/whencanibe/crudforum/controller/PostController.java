@@ -8,17 +8,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.whencanibe.crudforum.config.CustomUserDetails;
-import org.whencanibe.crudforum.domain.Comment;
 import org.whencanibe.crudforum.domain.Post;
-import org.whencanibe.crudforum.domain.User;
 import org.whencanibe.crudforum.dto.CommentDto;
 import org.whencanibe.crudforum.dto.PostDto;
 import org.whencanibe.crudforum.repository.PostRepository;
-import org.whencanibe.crudforum.repository.UserRepository;
 import org.whencanibe.crudforum.service.CommentService;
 import org.whencanibe.crudforum.service.PostLikeService;
 import org.whencanibe.crudforum.service.PostService;
-import org.whencanibe.crudforum.service.UserService;
 
 import java.util.HashMap;
 import java.util.List;
@@ -57,12 +53,20 @@ public class PostController {
     }
 
     @GetMapping("/{id}")
-    public String getPost(@PathVariable Long id, Model model) {
+    public String getPost(@PathVariable Long id,
+                          @AuthenticationPrincipal CustomUserDetails userDetails,
+                          Model model) {
         Post post = postService.getPostById(id);
         List<CommentDto> commentDtos = commentService.getCommentsByPostId(id);
 
+        boolean isAuthor = false;
+        if(userDetails != null && post.getUser().getId().equals(userDetails.getId())){
+            isAuthor = true;
+        }
+
         model.addAttribute("post", post);
         model.addAttribute("comments", commentDtos);
+        model.addAttribute("isAuthor", isAuthor);
         return "post/detail";
     }
 
@@ -106,8 +110,52 @@ public class PostController {
         return result;
     }
 
-    @DeleteMapping("/{id}")
-    public String deletePost(@PathVariable Long id) {
+    @GetMapping("/{id}/edit")
+    public String editPostForm(@PathVariable Long id,
+                               @AuthenticationPrincipal CustomUserDetails userDetails,
+                               Model model) {
+
+        if (userDetails == null) {
+            throw new IllegalArgumentException("로그인 후 수정할 수 있습니다.");
+        }
+
+        Post post = postService.getPostById(id); // 예외 발생 가능
+
+        if (!post.getUser().getId().equals(userDetails.getId())) {
+            throw new IllegalArgumentException("본인의 글만 수정할 수 있습니다.");
+        }
+
+        model.addAttribute("post", post);
+        return "post/edit";
+    }
+
+    @PutMapping("/{id}")
+    public String updatePost(@PathVariable Long id,
+                             @RequestParam String title,
+                             @RequestParam String content,
+                             @AuthenticationPrincipal CustomUserDetails userDetails) {
+        Post post = postService.getPostById(id);
+
+        // 권한 체크
+        if (!post.getUser().getId().equals(userDetails.getId())) {
+            throw new IllegalArgumentException("본인 글만 수정 가능");
+        }
+
+        // post 내용 수정
+        postService.updatePost(id, title, content, userDetails.getId());
+
+        return "redirect:/posts/" + id; // 수정 후 상세 페이지로 이동
+    }
+
+    @PostMapping("/{id}/delete")
+    public String deletePost(@PathVariable Long id,
+                             @AuthenticationPrincipal CustomUserDetails userDetails) {
+        Post post = postService.getPostById(id);
+        // 권한 체크
+        if (!post.getUser().getId().equals(userDetails.getId())) {
+            throw new IllegalArgumentException("본인 글만 삭제 가능");
+        }
+
         postService.deletePost(id);
         return "redirect:/posts";
     }

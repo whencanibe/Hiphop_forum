@@ -11,7 +11,6 @@ import org.whencanibe.crudforum.repository.CommentRepository;
 import org.whencanibe.crudforum.repository.PostRepository;
 import org.whencanibe.crudforum.repository.UserRepository;
 
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 

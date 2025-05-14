@@ -16,6 +16,7 @@ import org.whencanibe.crudforum.repository.UserRepository;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 
 @RequiredArgsConstructor
@@ -73,7 +74,7 @@ public class PostService {
 
     //조회수도 +1 올라감.
     public Post getPostById(Long id) {
-        Post post = postRepository.findById(id).orElseThrow(() -> new RuntimeException("Post not found"));
+        Post post = postRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Post not found"));
 
         post.increaseViewCount();
         // 즉시 DB 반영을 원한다면 save 호출 (JPA 영속성 컨텍스트에 의해 자동 반영되는 경우도 있음)
@@ -96,6 +97,18 @@ public class PostService {
             post.saveImageFile(imageFile);
         }
         return postRepository.save(post);
+    }
+
+    @Transactional
+    public void updatePost(Long id, String title, String content, Long userId) {
+        Post post = postRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("게시물 없음"));
+
+        if (!post.getUser().getId().equals(userId)) {
+            throw new IllegalArgumentException("수정 권한 없음");
+        }
+
+        post.edit(title, content);
     }
 
     public void deletePost(Long id) {

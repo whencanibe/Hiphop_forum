@@ -22,6 +22,19 @@
     <p th:text="${post.content}"></p>
     <p>Author: <span th:text="${post.user.username}"></span></p>
 
+    <!-- 수정/삭제 버튼: isOwner == true 일 때만 보이기 -->
+    <div th:if="${isAuthor}">
+        <a th:href="@{/posts/{id}/edit(id=${post.id})}">수정</a>
+
+        <!-- 삭제는 POST/DELETE 요청을 활용, 간단히 form으로 만들 수 있음 -->
+        <form th:action="@{/posts/{id}/delete(id=${post.id})}" method="post">
+            <!-- Spring Security CSRF 토큰 필요 시 자동 처리 or 추가 -->
+            <!-- HTML5에서 DELETE 메서드를 직접 쓰려면 JavaScript로 번거롭지만,
+                 보통은 POST로 보내고 Controller에서 delete 로직을 처리하기도 함 -->
+            <button type="submit">삭제</button>
+        </form>
+    </div>
+
     <!-- detail.html -->
     <button id="likeBtn"
             th:attr="data-post-id=${post.id}">

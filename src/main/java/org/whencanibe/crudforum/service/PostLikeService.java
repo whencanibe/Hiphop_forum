@@ -28,7 +28,10 @@ public class PostLikeService {
         // 2) 만약 이미 눌러져 있다면 -> delete
         if (optionalLike.isPresent()) {
             PostLike postLike = optionalLike.get();
+
             postLike.unlike();
+            postLike.getPost().removeLike(postLike);
+
             postLikeRepository.delete(postLike);
 
             return false; // false는 "좋아요가 취소됨"을 의미
@@ -47,6 +50,7 @@ public class PostLikeService {
                                     .build();
             // Post의 likeCount 증가 처리
             newLike.like();
+            post.addLike(newLike);
             postLikeRepository.save(newLike);
             return true; // true는 "좋아요가 추가됨"을 의미
         }

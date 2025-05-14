@@ -33,6 +33,10 @@ public class PostLike {
         this.post = post;
     }
 
+    public void disconnectWithPost(){
+        this.post = null;
+    }
+
     public void like(){
         post.increaseLike();
     }
